@@ -1,2 +1,3 @@
-INSERT INTO customers (customers_count) VALUES
-	 (19759);
+--считаем общее количество клиентов
+select COUNT(customer_id) as customers_count
+from customers;
