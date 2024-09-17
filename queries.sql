@@ -35,3 +35,31 @@ FROM individual_income AS ii,
     overall_avg AS oa
 WHERE ii.average_income < oa.overall_avg_income
 ORDER BY ii.average_income ASC;
+
+--отчет с данными по выручке по каждому продавцу и дню недели
+with days as (
+    select
+        concat(e.first_name, ' ', e.last_name) as seller,
+        to_char(s.sale_date, 'Day') as day_of_week,
+        floor(sum(s.quantity * p.price)) as income
+    from employees as e
+    inner join sales as s on e.employee_id = s.sales_person_id
+    inner join products as p on s.product_id = p.product_id
+    group by seller, to_char(s.sale_date, 'Day')
+)
+select
+    d.seller,
+    d.income,
+    trim(d.day_of_week) as day_of_week
+from days as d
+order by
+    case
+        when trim(d.day_of_week) = 'Monday' then 1
+        when trim(d.day_of_week) = 'Tuesday' then 2
+        when trim(d.day_of_week) = 'Wednesday' then 3
+        when trim(d.day_of_week) = 'Thursday' then 4
+        when trim(d.day_of_week) = 'Friday' then 5
+        when trim(d.day_of_week) = 'Saturday' then 6
+        when trim(d.day_of_week) = 'Sunday' then 7
+    end,
+    d.seller;
