@@ -37,6 +37,7 @@ WHERE ii.average_income < oa.overall_avg_income
 ORDER BY ii.average_income ASC;
 
 --отчет с данными по выручке по каждому продавцу и дню недели
+--функция TRIM для удаления пробелов из строки day_of_week, полученной с помощью функции TO_CHAR
 with days as (
     select
         concat(e.first_name, ' ', e.last_name) as seller,
