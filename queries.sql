@@ -89,6 +89,17 @@ order by
     end;
 
 --отчет с количеством покупателей и выручкой по месяцам
+SELECT
+    TO_CHAR(s.sale_date, 'YYYY-MM') AS selling_month,
+    COUNT(DISTINCT c.customer_id) AS total_customers,
+    FLOOR(SUM(s.quantity * p.price)) AS income
+FROM employees AS e
+INNER JOIN sales AS s ON e.employee_id = s.sales_person_id
+INNER JOIN products AS p ON s.product_id = p.product_id
+INNER JOIN customers AS c ON s.customer_id = c.customer_id
+GROUP BY TO_CHAR(s.sale_date, 'YYYY-MM')
+ORDER BY selling_month;
+
 
 --отчет с покупателями первая покупка которых пришлась на время проведения специальных акций
 /* Находим первую дату, когда товар стоил 0 */
