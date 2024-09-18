@@ -64,3 +64,61 @@ order by
         when trim(d.day_of_week) = 'Sunday' then 7
     end,
     d.seller;
+
+--отчет с возрастными группами покупателей
+with cat as (
+    select
+        case
+            when c.age between 16 and 25 then '16-25'
+            when c.age between 26 and 40 then '26-40'
+            else '40+'
+        end as age_category,
+        count(c.customer_id) as count
+    from customers as c
+    group by age_category
+)
+select
+    cat.age_category,
+    cat.count
+from cat
+order by
+    case
+        when cat.age_category = '16-25' then 1
+        when cat.age_category = '26-40' then 2
+        else 3
+    end;
+
+--отчет с количеством покупателей и выручкой по месяцам
+
+--отчет с покупателями первая покупка которых пришлась на время проведения специальных акций
+/* Находим первую дату, когда товар стоил 0 */
+WITH FIRSTDATE AS (
+    SELECT MIN(S.SALE_DATE) AS FIRST_ZERO_DATE
+    FROM SALES AS S
+    INNER JOIN PRODUCTS AS P ON S.PRODUCT_ID = P.PRODUCT_ID
+    WHERE P.PRICE = 0
+),
+    /* Находим первую покупку каждого клиента */
+CUSTOMERFIRSTPURCHASE AS (
+    SELECT
+        C.CUSTOMER_ID,
+        CONCAT(C.FIRST_NAME, ' ', C.LAST_NAME) AS CUSTOMER,
+        MIN(S.SALE_DATE) AS FIRST_PURCHASE_DATE,
+        CONCAT(E.FIRST_NAME, ' ', E.LAST_NAME) AS SELLER
+    FROM EMPLOYEES AS E
+    INNER JOIN SALES AS S ON E.EMPLOYEE_ID = S.SALES_PERSON_ID
+    INNER JOIN CUSTOMERS AS C ON S.CUSTOMER_ID = C.CUSTOMER_ID
+    GROUP BY C.CUSTOMER_ID, C.FIRST_NAME, C.LAST_NAME, E.FIRST_NAME, E.LAST_NAME
+)
+SELECT
+    CFP.CUSTOMER,
+    CFP.FIRST_PURCHASE_DATE AS SALE_DATE,
+    CFP.SELLER
+FROM CUSTOMERFIRSTPURCHASE AS CFP
+INNER JOIN FIRSTDATE AS FD ON CFP.FIRST_PURCHASE_DATE = FD.FIRST_ZERO_DATE
+ORDER BY CFP.CUSTOMER_ID;
+
+
+
+
+
