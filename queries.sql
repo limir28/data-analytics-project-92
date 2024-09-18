@@ -11,7 +11,7 @@ from employees as e
 inner join sales as s on e.employee_id = s.sales_person_id
 inner join products as p on s.product_id = p.product_id
 group by seller
-order by income desc;
+order by income desc limit 10;
 
 --отчет с продавцами, чья выручка ниже средней выручки всех продавцов
 WITH individual_income AS (
