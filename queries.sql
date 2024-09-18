@@ -73,13 +73,13 @@ with cat as (
             when c.age between 26 and 40 then '26-40'
             else '40+'
         end as age_category,
-        count(c.customer_id) as count
+        count(c.customer_id) as age_count
     from customers as c
     group by age_category
 )
 select
     cat.age_category,
-    cat.count
+    cat.age_count
 from cat
 order by
     case
