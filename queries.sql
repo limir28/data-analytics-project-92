@@ -77,6 +77,7 @@ with cat as (
     from customers as c
     group by age_category
 )
+
 select
     cat.age_category,
     cat.age_count
@@ -87,6 +88,7 @@ order by
         when cat.age_category = '26-40' then 2
         else 3
     end;
+
 
 --отчет с количеством покупателей и выручкой по месяцам
 SELECT
