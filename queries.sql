@@ -54,8 +54,8 @@ with days as (
 
 select
     d.seller,
-    d.income,
-    trim(d.day_of_week) as day_of_week
+    trim(d.day_of_week) as day_of_week,
+    d.income
 from days as d
 order by
     case
