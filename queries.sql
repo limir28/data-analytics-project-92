@@ -44,12 +44,12 @@ ORDER BY ii.average_income ASC;
 with days as (
     select
         concat(e.first_name, ' ', e.last_name) as seller,
-        to_char(s.sale_date, 'Day') as day_of_week,
+        to_char(s.sale_date, 'day') as day_of_week,
         floor(sum(s.quantity * p.price)) as income
     from employees as e
     inner join sales as s on e.employee_id = s.sales_person_id
     inner join products as p on s.product_id = p.product_id
-    group by seller, to_char(s.sale_date, 'Day')
+    group by seller, to_char(s.sale_date, 'day')
 )
 
 select
@@ -59,13 +59,13 @@ select
 from days as d
 order by
     case
-        when trim(d.day_of_week) = 'Monday' then 1
-        when trim(d.day_of_week) = 'Tuesday' then 2
-        when trim(d.day_of_week) = 'Wednesday' then 3
-        when trim(d.day_of_week) = 'Thursday' then 4
-        when trim(d.day_of_week) = 'Friday' then 5
-        when trim(d.day_of_week) = 'Saturday' then 6
-        when trim(d.day_of_week) = 'Sunday' then 7
+        when trim(d.day_of_week) = 'monday' then 1
+        when trim(d.day_of_week) = 'tuesday' then 2
+        when trim(d.day_of_week) = 'wednesday' then 3
+        when trim(d.day_of_week) = 'thursday' then 4
+        when trim(d.day_of_week) = 'friday' then 5
+        when trim(d.day_of_week) = 'saturday' then 6
+        when trim(d.day_of_week) = 'sunday' then 7
     end,
     d.seller;
 
